@@ -1,0 +1,31 @@
+{
+  "enabled": true,
+  "dispatch": false,
+  "processing_mode": "focus",
+
+  "vault": "/absolute/path/to/your/obsidian/vault",
+  "title": "OBS 记忆整理",
+
+  "quiet_seconds": 60,
+  "poll_seconds": 15,
+  "daily_job_limit": 100,
+  "max_attempts": 3,
+  "job_timeout_seconds": 600,
+
+  "focus_window_chars": 6000,
+  "focus_batch_sources": 12,
+  "focus_batch_chars": 48000,
+  "focus_mix_small_batches": true,
+  "chunk_chars": 18000,
+  "rotate_messages": 40,
+
+  "preferred_family": "deepseek.*flash",
+  "preferred_providers": [],
+
+  "exclude_sessions": [],
+  "validation_sessions": [],
+  "validation_only": false,
+
+  "mcp_command": null,
+  "mcp_server": "obsidian"
+}

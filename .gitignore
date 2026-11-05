@@ -1,0 +1,13 @@
+# Local state and secrets
+second-brain/config.json
+second-brain/state/
+second-brain/backups/
+second-brain/__pycache__/
+**/__pycache__/
+*.pyc
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
