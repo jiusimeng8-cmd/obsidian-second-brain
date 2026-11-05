@@ -1,12 +1,16 @@
 # Obsidian Second Brain
 
-把 OpenCode / OpenChamber 里的历史对话，自动整理成一座可检索的 Obsidian 笔记库。
+把 AI 客户端里的历史对话，自动整理成一座可检索的 Obsidian 笔记库。
 
 一套在你本机常驻运行的「第二大脑」：把分散在各个项目会话里的决定、偏好、结论、进度和未完成事项，
 提炼进 Markdown 笔记，并保留来源、时间与核验状态。你继续按项目隔离聊天，不用手工整理。
 
+**不绑定具体客户端。** 自带的是 OpenCode / OpenChamber 适配器；Codex CLI、Claude Code、ZCode 以及自建 Agent 平台，
+只要满足「列会话、读消息、派发任务、读写笔记」四项能力，让自己的 AI 照着
+[docs/适配其他客户端.md](docs/适配其他客户端.md) 写一个适配器即可，上层逻辑全部复用。
+
 ```
-OpenCode 会话（任意目录、含已归档）
+AI 客户端会话（任意目录、含已归档）
         │  本机回环 API，只读取
         ▼
 采集器：分页取消息 → 冻结已结束的回合 → 重要窗口抽样
@@ -49,7 +53,7 @@ Obsidian 笔记库（长期知识）+ 处理进度看板
 ## 快速开始
 
 要求：Windows（Linux/macOS 亦可，见 [docs/安装.md](docs/安装.md)）、Python 3.10+、Node.js、Obsidian 笔记库、
-OpenCode 或 OpenChamber 桌面端，以及一个 Obsidian MCP 服务（`@bitbonsai/mcpvault` 或等价实现）。
+可适配的 AI 客户端（已内置 OpenCode / OpenChamber），以及一个 Obsidian MCP 服务（`@bitbonsai/mcpvault` 或等价实现）。
 
 ```powershell
 # 1. 放到 OpenCode 的插件同级目录
@@ -86,6 +90,7 @@ Get-Content "$env:USERPROFILE\.config\opencode\second-brain\second-brain\state\h
 - [docs/配置.md](docs/配置.md) — 每个配置项的含义与推荐值
 - [docs/运行与运维.md](docs/运行与运维.md) — 看板指标、暂停/恢复/回滚、常见故障
 - [docs/笔记库规则.md](docs/笔记库规则.md) — 让业务会话主动检索记忆的入口与规则
+- [docs/适配其他客户端.md](docs/适配其他客户端.md) — 能力契约，以及 Codex / Claude Code / 文件型平台的接法
 - [docs/AI复刻指南.md](docs/AI复刻指南.md) — 给另一个 AI 的完整复刻指令
 
 ## 目录结构
@@ -96,7 +101,7 @@ second-brain/
   collector.py     采集：会话盘点、游标、冻结回合、消息落库
   focus.py         选择：重要窗口、批次合并、旧任务接管
   quality.py       验证：回执解析、真实工具调用、文件/引文/来源核对
-  api.py           本机回环 API 适配（读取凭据从不打印）
+  api.py           客户端适配层（内置 OpenCode/OpenChamber；读凭据从不打印）
   storage.py       台账 schema、脱敏、日志、文件锁
   prompt.txt       完整精读模式的任务提示词
   focus-prompt.txt 重要窗口模式的任务提示词
@@ -111,7 +116,9 @@ docs/vault/        可直接放进笔记库的入口、规则与节点模板
 - **不是「记住一切」。** 它做的是重要信息提炼，未选中的原文保留在原会话，标记为可回查。
 - **验证的是过程，不是真理。** 它证明「笔记被写过、被读过、引文存在、来源对得上」，不证明结论在业务上正确。
 - **凭据不进笔记。** 采集时做启发式脱敏，笔记只允许写普通 Markdown；凭据目录被排除在读写之外。
-- **只接 OpenCode / OpenChamber。** 其他客户端需要各自的适配器，本项目不假装已支持。
+- **客户端可换，逻辑不变。** OpenCode / OpenChamber 是内置适配器；其他客户端按四项能力契约写适配器即可，
+  不要为了省事把采集/核验逻辑塞回客户端里。
+- **弱证据要单独标记。** 记录里没有工具轨迹的平台，只能验证「文件变了 + 引文在 + 来源对」，看板上要区分强弱。
 - **附件只留元数据。** 文档/图片正文不解析。
 - **调用有预算。** 全历史回补是长期任务，不要用「多久跑完」当验收标准。
 

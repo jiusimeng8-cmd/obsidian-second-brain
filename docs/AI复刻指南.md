@@ -14,13 +14,17 @@
 4. MCP 服务真的能读写一个笔记（做一次真实 `read_note`），而不是「列表里显示 connected」。
 5. 会话消息接口返回的真实结构：助手正文常在 `content[]` 里，`text` 可能为空。
 
-## 2. 必须实现的接口
+## 2. 必须实现的能力（适配器契约）
 
-| 用途 | 接口 |
+**与客户端无关**，只需四个能力：列会话、读完整消息、派发任务并判定完成、读写笔记。
+下表是 OpenCode / OpenChamber 的参考映射；Codex、Claude Code、文件型平台的接法见
+[适配其他客户端](适配其他客户端.md)。换平台只替换这一层，不要改采集与核验逻辑。
+
+| 能力 | OpenCode / OpenChamber 参考实现 |
 | --- | --- |
-| 会话列表（含归档） | `GET /api/session?limit=100&order=desc&archived=true|false`，游标分页 |
+| 列会话（含归档） | `GET /api/session?limit=100&order=desc&archived=true|false`，游标分页 |
 | 会话详情 | `GET /api/session/{id}` |
-| 消息（完整历史） | `GET /api/session/{id}/message?limit=100&order=desc`，游标分页，按时间反转 |
+| 读完整消息 | `GET /api/session/{id}/message?limit=100&order=desc`，游标分页，按时间反转 |
 | 新建整理会话 | `POST /api/session` `{title, agent, location:{directory}}` |
 | 改标题 / 归档 | `PATCH /api/session/{id}` `{title}` 或 `{archived:true}` |
 | 切模型 | `POST /api/session/{id}/model` `{model:{id:"裸模型ID", providerID}}` |
